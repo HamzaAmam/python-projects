@@ -98,6 +98,20 @@ docs/
 
 ### Tests and learning path
 
-The tests check known roots, engineering answers, derivatives against finite differences, histories, endpoint handling, invalid inputs, domain errors, nonfinite arithmetic, iteration limits, a Newton cycle, and stagnation. Tests run locally using `unittest`; no hosted CI workflow is configured.
+The tests check known roots, engineering answers, derivatives against finite differences, histories, endpoint handling, invalid inputs, domain errors, nonfinite arithmetic, iteration limits, a Newton cycle, and stagnation. Run them locally from the repository root:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+### Continuous integration (CI)
+
+Continuous integration automatically runs the tests on GitHub so changes that break tested behavior are easier to catch. The workflow in [`.github/workflows/tests.yml`](.github/workflows/tests.yml) runs on every push to any branch and when a pull request is opened, reopened, or updated with new commits.
+
+Each run creates two independent Ubuntu jobs: one for Python 3.10 (the project's documented minimum) and one for Python 3.15 (the current stable series when this workflow was added). This small matrix checks both ends of that version range; it does not test every intermediate version. Each job checks out the code, sets up Python, and runs the same `unittest` command above. No third-party packages are installed. Both jobs continue independently, and any failing test makes its job fail.
+
+To view results, open the repository's **Actions** tab, select **Python tests**, then select a run and a Python job. Expand **Run unittest suite** to see individual test results and failure details. On a pull request, open the **Checks** tab to see the same jobs. A green check means that job passed; a red cross means it failed. These checks report results; requiring them before merging is a separate repository setting.
+
+Adding the workflow file does not itself prove that CI passes. Confirm the result of an actual run in GitHub.
 
 Read [the learning guide](docs/learning_guide.md), run the trace, then work through its exercises. Start with `examples/engineering.py` to understand the equations; read `root_finding/solvers.py` next to see the loops. Suggested extensions in the guide are **not implemented**.
